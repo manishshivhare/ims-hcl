@@ -210,7 +210,7 @@ const LakshmiTextilesInventory = () => {
   const [saleQuantity, setSaleQuantity] = useState(1)
   const [stockQuantity, setStockQuantity] = useState(1)
 
-  // New product form
+  // New product form - Fixed to use strings for input fields
   const [newProduct, setNewProduct] = useState({
     name: "",
     category: "Sarees",
@@ -267,39 +267,61 @@ const LakshmiTextilesInventory = () => {
     setStockQuantity(1)
   }
 
-  // Add new product
+  // Add new product - Fixed validation and parsing
   const handleAddNewProduct = () => {
+    // Validate all fields are filled
     if (
-      newProduct.name &&
-      newProduct.currentStock &&
-      newProduct.buyingPrice &&
-      newProduct.sellingPrice &&
-      newProduct.minStock
+      !newProduct.name.trim() ||
+      !newProduct.currentStock.trim() ||
+      !newProduct.buyingPrice.trim() ||
+      !newProduct.sellingPrice.trim() ||
+      !newProduct.minStock.trim()
     ) {
-      const product = {
-        id: Math.max(...products.map((p) => p.id)) + 1,
-        ...newProduct,
-        currentStock: Number.parseInt(newProduct.currentStock),
-        buyingPrice: Number.parseFloat(newProduct.buyingPrice),
-        sellingPrice: Number.parseFloat(newProduct.sellingPrice),
-        minStock: Number.parseInt(newProduct.minStock),
-        totalSold: 0,
-        lastStockAdded: Number.parseInt(newProduct.currentStock),
-      }
-      setProducts([...products, product])
-      setNewProduct({
-        name: "",
-        category: "Sarees",
-        currentStock: "",
-        buyingPrice: "",
-        sellingPrice: "",
-        minStock: "",
-      })
-      setCurrentView("dashboard")
-      alert(t.productAdded)
-    } else {
       alert(t.fillAllFields)
+      return
     }
+
+    // Parse and validate numeric values
+    const currentStock = parseInt(newProduct.currentStock)
+    const buyingPrice = parseFloat(newProduct.buyingPrice)
+    const sellingPrice = parseFloat(newProduct.sellingPrice)
+    const minStock = parseInt(newProduct.minStock)
+
+    // Check if parsing was successful
+    if (isNaN(currentStock) || isNaN(buyingPrice) || isNaN(sellingPrice) || isNaN(minStock)) {
+      alert("Please enter valid numbers")
+      return
+    }
+
+    // Check if values are positive
+    if (currentStock < 0 || buyingPrice < 0 || sellingPrice < 0 || minStock < 0) {
+      alert("Values cannot be negative")
+      return
+    }
+
+    const product = {
+      id: Math.max(...products.map((p) => p.id)) + 1,
+      name: newProduct.name.trim(),
+      category: newProduct.category,
+      currentStock: currentStock,
+      buyingPrice: buyingPrice,
+      sellingPrice: sellingPrice,
+      minStock: minStock,
+      totalSold: 0,
+      lastStockAdded: currentStock,
+    }
+
+    setProducts([...products, product])
+    setNewProduct({
+      name: "",
+      category: "Sarees",
+      currentStock: "",
+      buyingPrice: "",
+      sellingPrice: "",
+      minStock: "",
+    })
+    setCurrentView("dashboard")
+    alert(t.productAdded)
   }
 
   // Language Toggle Component
@@ -715,6 +737,7 @@ const LakshmiTextilesInventory = () => {
                 onChange={(e) => setNewProduct({ ...newProduct, currentStock: e.target.value })}
                 className="w-full p-4 border-2 border-gray-200 rounded-xl text-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200"
                 placeholder="10"
+                min="0"
               />
             </div>
             <div>
@@ -725,6 +748,7 @@ const LakshmiTextilesInventory = () => {
                 onChange={(e) => setNewProduct({ ...newProduct, minStock: e.target.value })}
                 className="w-full p-4 border-2 border-gray-200 rounded-xl text-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200"
                 placeholder="5"
+                min="0"
               />
             </div>
           </div>
@@ -740,6 +764,8 @@ const LakshmiTextilesInventory = () => {
                   onChange={(e) => setNewProduct({ ...newProduct, buyingPrice: e.target.value })}
                   className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl text-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200"
                   placeholder="800"
+                  min="0"
+                  step="0.01"
                 />
               </div>
             </div>
@@ -753,6 +779,8 @@ const LakshmiTextilesInventory = () => {
                   onChange={(e) => setNewProduct({ ...newProduct, sellingPrice: e.target.value })}
                   className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl text-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200"
                   placeholder="1200"
+                  min="0"
+                  step="0.01"
                 />
               </div>
             </div>
