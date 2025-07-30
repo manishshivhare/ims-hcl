@@ -1,3 +1,4 @@
+```mermaid
 flowchart TD
     A[Application Start] --> B[Initialize State]
     B --> C{Language Selection}
