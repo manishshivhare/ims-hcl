@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import {
   Package,
   ShoppingCart,
@@ -358,7 +358,7 @@ const LakshmiTextilesSystem = () => {
   const [stockQuantity, setStockQuantity] = useState(1)
   const [currentlyServing, setCurrentlyServing] = useState("Rekha Verma - Border Design")
 
-  // Enhanced new product form with better validation
+  // Enhanced new product form with better validation - FIXED
   const [newProduct, setNewProduct] = useState({
     name: "",
     category: "Sarees",
@@ -368,7 +368,7 @@ const LakshmiTextilesSystem = () => {
     minStock: "",
   })
 
-  // Customization form state
+  // Customization form state - FIXED
   const [newCustomization, setNewCustomization] = useState({
     customerName: "",
     customerPhone: "",
@@ -433,6 +433,15 @@ const LakshmiTextilesSystem = () => {
     ))
     setStockQuantity(1)
   }
+
+  // FIXED: Use useCallback to prevent re-rendering issues
+  const handleNewProductChange = useCallback((field, value) => {
+    setNewProduct(prev => ({ ...prev, [field]: value }))
+  }, [])
+
+  const handleNewCustomizationChange = useCallback((field, value) => {
+    setNewCustomization(prev => ({ ...prev, [field]: value }))
+  }, [])
 
   // Enhanced product validation
   const validateProductForm = () => {
@@ -1032,7 +1041,7 @@ const LakshmiTextilesSystem = () => {
     </div>
   )
 
-  // Product Detail View (existing code continues...)
+  // Product Detail View
   const ProductView = () => (
     <div className="space-y-8">
       <LanguageToggle />
@@ -1194,7 +1203,7 @@ const LakshmiTextilesSystem = () => {
     </div>
   )
 
-  // Enhanced Add Product View with Fixed Validation
+  // FIXED: Enhanced Add Product View with Fixed Input Handling
   const AddProductView = () => (
     <div className="space-y-8">
       <LanguageToggle />
@@ -1217,7 +1226,7 @@ const LakshmiTextilesSystem = () => {
             <input
               type="text"
               value={newProduct.name}
-              onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+              onChange={(e) => handleNewProductChange('name', e.target.value)}
               className="w-full p-4 border-2 border-gray-200 rounded-xl text-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 outline-none"
               placeholder={t.productNamePlaceholder}
             />
@@ -1227,7 +1236,7 @@ const LakshmiTextilesSystem = () => {
             <label className="block text-lg font-bold mb-3 text-gray-700">{t.categoryLabel} *</label>
             <select
               value={newProduct.category}
-              onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+              onChange={(e) => handleNewProductChange('category', e.target.value)}
               className="w-full p-4 border-2 border-gray-200 rounded-xl text-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 outline-none"
             >
               {categories.map((cat) => (
@@ -1244,7 +1253,7 @@ const LakshmiTextilesSystem = () => {
               <input
                 type="number"
                 value={newProduct.currentStock}
-                onChange={(e) => setNewProduct({ ...newProduct, currentStock: e.target.value })}
+                onChange={(e) => handleNewProductChange('currentStock', e.target.value)}
                 className="w-full p-4 border-2 border-gray-200 rounded-xl text-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 outline-none"
                 placeholder="10"
                 min="0"
@@ -1256,7 +1265,7 @@ const LakshmiTextilesSystem = () => {
               <input
                 type="number"
                 value={newProduct.minStock}
-                onChange={(e) => setNewProduct({ ...newProduct, minStock: e.target.value })}
+                onChange={(e) => handleNewProductChange('minStock', e.target.value)}
                 className="w-full p-4 border-2 border-gray-200 rounded-xl text-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 outline-none"
                 placeholder="5"
                 min="0"
@@ -1273,7 +1282,7 @@ const LakshmiTextilesSystem = () => {
                 <input
                   type="number"
                   value={newProduct.buyingPrice}
-                  onChange={(e) => setNewProduct({ ...newProduct, buyingPrice: e.target.value })}
+                  onChange={(e) => handleNewProductChange('buyingPrice', e.target.value)}
                   className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl text-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 outline-none"
                   placeholder="800"
                   min="0"
@@ -1288,7 +1297,7 @@ const LakshmiTextilesSystem = () => {
                 <input
                   type="number"
                   value={newProduct.sellingPrice}
-                  onChange={(e) => setNewProduct({ ...newProduct, sellingPrice: e.target.value })}
+                  onChange={(e) => handleNewProductChange('sellingPrice', e.target.value)}
                   className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl text-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 outline-none"
                   placeholder="1200"
                   min="0"
@@ -1310,7 +1319,7 @@ const LakshmiTextilesSystem = () => {
     </div>
   )
 
-  // Add Customization View
+  // FIXED: Add Customization View with Fixed Input Handling
   const AddCustomizationView = () => (
     <div className="space-y-8">
       <LanguageToggle />
@@ -1338,7 +1347,7 @@ const LakshmiTextilesSystem = () => {
               <input
                 type="text"
                 value={newCustomization.customerName}
-                onChange={(e) => setNewCustomization({ ...newCustomization, customerName: e.target.value })}
+                onChange={(e) => handleNewCustomizationChange('customerName', e.target.value)}
                 className="w-full p-4 border-2 border-gray-200 rounded-xl text-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 outline-none"
                 placeholder="Enter customer name"
               />
@@ -1348,7 +1357,7 @@ const LakshmiTextilesSystem = () => {
               <input
                 type="tel"
                 value={newCustomization.customerPhone}
-                onChange={(e) => setNewCustomization({ ...newCustomization, customerPhone: e.target.value })}
+                onChange={(e) => handleNewCustomizationChange('customerPhone', e.target.value)}
                 className="w-full p-4 border-2 border-gray-200 rounded-xl text-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 outline-none"
                 placeholder="10-digit phone number"
                 maxLength="10"
@@ -1362,7 +1371,7 @@ const LakshmiTextilesSystem = () => {
               <label className="block text-lg font-bold mb-3 text-gray-700">{t.baseProduct} *</label>
               <select
                 value={newCustomization.baseProduct}
-                onChange={(e) => setNewCustomization({ ...newCustomization, baseProduct: e.target.value })}
+                onChange={(e) => handleNewCustomizationChange('baseProduct', e.target.value)}
                 className="w-full p-4 border-2 border-gray-200 rounded-xl text-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 outline-none"
               >
                 <option value="">Select base product</option>
@@ -1377,7 +1386,7 @@ const LakshmiTextilesSystem = () => {
               <label className="block text-lg font-bold mb-3 text-gray-700">{t.customizationType} *</label>
               <select
                 value={newCustomization.customizationType}
-                onChange={(e) => setNewCustomization({ ...newCustomization, customizationType: e.target.value })}
+                onChange={(e) => handleNewCustomizationChange('customizationType', e.target.value)}
                 className="w-full p-4 border-2 border-gray-200 rounded-xl text-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 outline-none"
               >
                 {customizationTypes.map((type) => (
@@ -1394,7 +1403,7 @@ const LakshmiTextilesSystem = () => {
             <label className="block text-lg font-bold mb-3 text-gray-700">{t.description} *</label>
             <textarea
               value={newCustomization.description}
-              onChange={(e) => setNewCustomization({ ...newCustomization, description: e.target.value })}
+              onChange={(e) => handleNewCustomizationChange('description', e.target.value)}
               className="w-full p-4 border-2 border-gray-200 rounded-xl text-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 outline-none resize-none"
               rows="4"
               placeholder="Detailed description of customization requirements..."
@@ -1408,7 +1417,7 @@ const LakshmiTextilesSystem = () => {
               <input
                 type="number"
                 value={newCustomization.estimatedDays}
-                onChange={(e) => setNewCustomization({ ...newCustomization, estimatedDays: e.target.value })}
+                onChange={(e) => handleNewCustomizationChange('estimatedDays', e.target.value)}
                 className="w-full p-4 border-2 border-gray-200 rounded-xl text-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 outline-none"
                 placeholder="5"
                 min="1"
@@ -1419,7 +1428,7 @@ const LakshmiTextilesSystem = () => {
               <label className="block text-lg font-bold mb-3 text-gray-700">{t.priority} *</label>
               <select
                 value={newCustomization.priority}
-                onChange={(e) => setNewCustomization({ ...newCustomization, priority: e.target.value })}
+                onChange={(e) => handleNewCustomizationChange('priority', e.target.value)}
                 className="w-full p-4 border-2 border-gray-200 rounded-xl text-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 outline-none"
               >
                 {priorities.map((priority) => (
@@ -1440,7 +1449,7 @@ const LakshmiTextilesSystem = () => {
                 <input
                   type="number"
                   value={newCustomization.customizationPrice}
-                  onChange={(e) => setNewCustomization({ ...newCustomization, customizationPrice: e.target.value })}
+                  onChange={(e) => handleNewCustomizationChange('customizationPrice', e.target.value)}
                   className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl text-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 outline-none"
                   placeholder="500"
                   min="0"
@@ -1455,7 +1464,7 @@ const LakshmiTextilesSystem = () => {
                 <input
                   type="number"
                   value={newCustomization.advancePayment}
-                  onChange={(e) => setNewCustomization({ ...newCustomization, advancePayment: e.target.value })}
+                  onChange={(e) => handleNewCustomizationChange('advancePayment', e.target.value)}
                   className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl text-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 outline-none"
                   placeholder="250"
                   min="0"
